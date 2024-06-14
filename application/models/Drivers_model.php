@@ -3,7 +3,8 @@
 class Drivers_model extends CI_Model{
 	
 	public function add_drivers($data) { 
-		return	$this->db->insert('drivers',$data);
+		unset($data['d_id']);
+		return $this->db->insert('drivers',$data);
 	} 
     public function getall_drivers() { 
 		return $this->db->select('*')->from('drivers')->order_by('d_id','desc')->get()->result_array();

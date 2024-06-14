@@ -3,6 +3,7 @@
 class Customer_model extends CI_Model{
 	
 	public function add_customer($data) {
+		unset($data['c_id']);
 		$customerins = $data;
 		if(isset($data['c_pwd'])) {
 			$customerins['c_pwd'] = md5($data['c_pwd']); 

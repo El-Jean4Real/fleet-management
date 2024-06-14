@@ -3,7 +3,8 @@
 class Incomexpense_model extends CI_Model{
 	
 	public function add_incomexpense($data) { 
-		return	$this->db->insert('incomeexpense',$data);
+		unset($data['ie_id']);
+		return $this->db->insert('incomeexpense',$data);
 	} 
     public function getall_incomexpense() { 
 		$incomexpense = $this->db->select('*')->from('incomeexpense')->order_by('ie_id','desc')->get()->result_array();

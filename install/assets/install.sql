@@ -601,6 +601,10 @@ ALTER TABLE `vehicles`
 --
 ALTER TABLE `vehicle_group`
   MODIFY `gr_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+
+ALTER TABLE `vehicles` CHANGE `v_mileageperlitre` `v_mileageperlitre` VARCHAR(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NULL DEFAULT NULL;
+ALTER TABLE `customers` CHANGE `c_created_date` `c_created_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

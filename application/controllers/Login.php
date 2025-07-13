@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-class Login extends CI_Controller {
+class Login extends MY_Controller {
     //To load initial libraries, functions
 	function __construct( )
 	{

@@ -16,4 +16,9 @@ class Drivers_model extends CI_Model{
 		$this->db->where('d_id',$this->input->post('d_id'));
 		return $this->db->update('drivers',$this->input->post());
 	}
+	public function get_all() {
+	    $query = $this->db->get('drivers');
+	    return $query->result_array();
+	}
+
 } 

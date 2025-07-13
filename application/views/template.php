@@ -1,22 +1,23 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-if (isset($header))
-{
-    echo (isset($header)?$header:'');
+if (isset($header)) {
+    echo $header;
 }
 
-if (isset($sidebar))
-{
-    echo (isset($sidebar)?$sidebar:'');
+if (isset($sidebar)) {
+    echo $sidebar;
 }
 
-if (isset($content))
-{
-    echo (isset($content)?$content:'');
+if (isset($content)) {
+    echo $content;
 }
 
-if (isset($footer))
-{
-     echo (isset($footer)?$footer:'');
+if (isset($footer)) {
+    echo $footer;
 }
+?>
+
+</div> <!-- fermeture du .wrapper ouvert dans header.php -->
+</body>
+</html>

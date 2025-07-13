@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-class Vehicle extends CI_Controller {
+class Vehicle extends MY_Controller {
 	function __construct()
     {
           parent::__construct();

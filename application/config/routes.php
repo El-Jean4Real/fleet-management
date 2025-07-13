@@ -53,3 +53,9 @@ $route['default_controller'] = 'Frontendbooking';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 $route['triptracking/(:any)'] = 'triptracking';
+
+// Routes pour le module Objectifs
+$route['objectifs'] = 'Objectifs/index';
+$route['objectifs/add'] = 'Objectifs/add';
+$route['objectifs/edit/(:num)'] = 'Objectifs/edit/$1';
+$route['objectifs/delete/(:num)'] = 'Objectifs/delete/$1';

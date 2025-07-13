@@ -47,5 +47,11 @@ class vehicle_model extends CI_Model{
     		$this->db->delete('vehicle_group');
     		return true;
 		}
-	} 
+	
+	}
+	public function get_all() {
+	    $query = $this->db->get('vehicles');
+	    return $query->result_array();
+	}
+ 
 } 

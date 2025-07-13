@@ -191,34 +191,60 @@
                   <?php } ?>
                </ul>
             </li>
-            <?php }  if(userpermission('lr_ie_list') || userpermission('lr_ie_add')) { ?>
-            <li class="nav-item has-treeview <?php echo ((activate_menu('incomexpense'))=='active') ? 'menu-open':'' ?>
-               <?php echo ((activate_menu('addincomexpense'))=='active') ? 'menu-open':'' ?><?php echo ((activate_menu('editincomexpense'))=='active') ? 'menu-open':'' ?>">
-               <a href="#" class="nav-link <?php echo activate_menu('incomexpense');?> <?php echo activate_menu('editincomexpense');?> <?php echo activate_menu('addincomexpense');?>">
-                  <i class="nav-icon fa fa-dollar-sign"></i>
-                  <p>
-                     Income & Expenses
-                     <i class="right fas fa-angle-left"></i>
-                  </p>
-               </a>
-               <ul class="nav nav-treeview">
-                 <?php  if(userpermission('lr_ie_list')) { ?>
-                  <li class="nav-item">
-                     <a href="<?= base_url(); ?>incomexpense" class="nav-link <?php echo activate_menu('incomexpense');?> <?php echo activate_menu('editincomexpense');?>">
-                        <i class="nav-icon fas faa-list"></i>
-                        <p>Income & Expenses</p>
-                     </a>
-                  </li>
-                   <?php } if(userpermission('lr_ie_add')) { ?>
-                  <li class="nav-item">
-                     <a href="<?= base_url(); ?>incomexpense/addincomexpense" class="nav-link <?php echo activate_menu('addincomexpense');?>">
-                        <i class="nav-icon fas faa-plus"></i>
-                        <p>Add Income & Expenses</p>
-                     </a>
-                  </li>
-                  <?php } ?>
-               </ul>
-            </li>
+            <?php if(userpermission('lr_ie_list') || userpermission('lr_ie_add') || userpermission('lr_objectifs')) { ?>
+            <li class="nav-item has-treeview 
+                <?php echo (
+                    activate_menu('incomexpense') == 'active' ||
+                    activate_menu('addincomexpense') == 'active' ||
+                    activate_menu('editincomexpense') == 'active' ||
+                    activate_menu('objectifs') == 'active'
+                ) ? 'menu-open' : ''; ?>">
+
+                <a href="#" class="nav-link 
+                    <?php echo (
+                        activate_menu('incomexpense') == 'active' ||
+                        activate_menu('addincomexpense') == 'active' ||
+                        activate_menu('editincomexpense') == 'active'
+                    ) ? 'active' : ''; ?>">
+        
+                    <i class="nav-icon fa fa-dollar-sign"></i>
+                    <p>
+                        Income & Expenses
+                        <i class="right fas fa-angle-left"></i>
+                    </p>
+                </a>
+
+                <ul class="nav nav-treeview">
+                    <?php if(userpermission('lr_ie_list')) { ?>
+                    <li class="nav-item">
+                        <a href="<?= base_url(); ?>incomexpense" class="nav-link <?php echo activate_menu('incomexpense');?> <?php echo activate_menu('editincomexpense');?>">
+                            <i class="nav-icon fas faa-list"></i>
+                            <p>Income & Expenses</p>
+                        </a>
+                    </li>
+                    <?php } ?>
+
+        <?php if(userpermission('lr_ie_add')) { ?>
+        <li class="nav-item">
+            <a href="<?= base_url(); ?>incomexpense/addincomexpense" class="nav-link <?php echo activate_menu('addincomexpense');?>">
+                <i class="nav-icon fas faa-plus"></i>
+                <p>Add Income & Expenses</p>
+            </a>
+        </li>
+        <?php } ?>
+
+        <?php if(userpermission('lr_objectifs')) { ?>
+        <li class="nav-item">
+            <a href="<?= base_url(); ?>objectifs" class="nav-link <?php echo activate_menu('objectifs'); ?>">
+                <i class="nav-icon fas fa-bullseye"></i>
+                <p>Objectifs</p>
+            </a>
+        </li>
+        <?php } ?>
+    </ul>
+</li>
+<?php } ?>
+
             <?php }  if(userpermission('lr_tracking') || userpermission('lr_liveloc')) { ?>
             <li class="nav-item has-treeview <?php echo ((activate_menu('tracking'))=='active') ? 'menu-open':'' ?>
                <?php echo ((activate_menu('livestatus'))=='active') ? 'menu-open':'' ?>">

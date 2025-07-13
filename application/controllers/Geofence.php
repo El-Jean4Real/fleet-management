@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Geofence extends CI_Controller {
+class Geofence extends MY_Controller {
 
 	 function __construct()
      {

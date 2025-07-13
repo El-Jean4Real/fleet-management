@@ -17,7 +17,10 @@
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
-        <form method="post" id="vehicle_add" class="card basicvalidation" action="<?php echo base_url();?>users/<?php echo (isset($userdetails))?'updateuser':'insertuser'; ?>">
+        <form method="post" action="<?= base_url(isset($userdetails[0]['u_id']) ? 'users/updateuser' : 'users/insertuser'); ?>">
+
+
+
                 <div class="card-body">
 
 
@@ -354,10 +357,35 @@
                         </div>
                       </div>
                   </div>
+                  <div class="col-sm-6 col-md-4">
+                    <label class="form-label">Photo de profil</label>
+                    <div class="form-group">
+                      <input type="file" name="u_photo" class="form-control">
+                      <?php if (isset($userdetails[0]['u_photo']) && !empty($userdetails[0]['u_photo'])): ?>
+                        <br>
+                        <img src="<?= base_url('uploads/user_photos/' . $userdetails[0]['u_photo']); ?>" alt="Photo de profil" width="100">
+                      <?php endif; ?>
+                    </div>
                   </div>
-                <div class="card-footer text-right">
-                  <button type="submit" class="btn btn-primary"> <?php echo (isset($userdetails))?'Update User':'Add User' ?></button>
-                </div>
+
+                  </div>
+
+		<div class="card-footer text-right">
+		  <a href="<?= base_url('users'); ?>" class="btn btn-secondary mr-2">Annuler</a>
+
+		  <?php if (isset($userdetails[0]['u_id']) && userpermission('lr_user_delete')): ?>
+		    <a href="<?= base_url('users/deleteuser/' . $userdetails[0]['u_id']); ?>"
+		       class="btn btn-danger mr-2"
+		       onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')">
+		       Supprimer
+		    </a>
+		  <?php endif; ?>
+
+		  <button type="submit" class="btn btn-primary">
+		    <?php echo (isset($userdetails)) ? 'Update User' : 'Add User'; ?>
+		  </button>
+		</div>
+
               </form>
              </div>
     </section>

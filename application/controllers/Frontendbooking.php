@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Frontendbooking extends CI_Controller {
+class Frontendbooking extends MY_Controller {
 
 	 function __construct()
      {

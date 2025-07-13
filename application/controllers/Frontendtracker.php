@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Frontendtracker extends CI_Controller {
+class Frontendtracker extends MY_Controller {
 
 	 function __construct()
      {

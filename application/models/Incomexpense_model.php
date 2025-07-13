@@ -48,5 +48,33 @@ class Incomexpense_model extends CI_Model{
 		{
 			return array();
 		}
+	
 	}
+
+	// Total income (recette manuelle) pour un véhicule et une période
+	public function get_total_income($v_id = null, $start = null, $end = null) {
+	    $this->db->select('SUM(ie_amount) as total')
+	             ->from('incomeexpense')
+	             ->where('ie_type', 'income');
+             
+	    if ($v_id) $this->db->where('ie_v_id', $v_id);
+	    if ($start) $this->db->where('ie_date >=', $start);
+	    if ($end) $this->db->where('ie_date <=', $end);
+
+	    return $this->db->get()->row()->total ?? 0;
+	}
+
+	// Total expense (dépenses) pour un véhicule et une période
+	public function get_total_expense($v_id = null, $start = null, $end = null) {
+	    $this->db->select('SUM(ie_amount) as total')
+	             ->from('incomeexpense')
+	             ->where('ie_type', 'expense');
+
+	    if ($v_id) $this->db->where('ie_v_id', $v_id);
+	    if ($start) $this->db->where('ie_date >=', $start);
+	    if ($end) $this->db->where('ie_date <=', $end);
+
+	    return $this->db->get()->row()->total ?? 0;
+	}
+
 } 

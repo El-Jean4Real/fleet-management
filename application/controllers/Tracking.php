@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Tracking extends CI_Controller {
+class Tracking extends MY_Controller {
 
 	 function __construct()
      {

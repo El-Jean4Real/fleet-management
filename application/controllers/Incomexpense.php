@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Incomexpense extends CI_Controller {
+class Incomexpense extends MY_Controller {
 
 	 function __construct()
      {

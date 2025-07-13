@@ -79,10 +79,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     }
 
     function userpermission($link) {
-    	$permissons = $_SESSION['userroles'];
-    	if($permissons[$link]==1) {
-    		return true;
-    	} else {
-    		return false;
-    	}
-    }
+	$permissons = $_SESSION['userroles'] ?? [];
+
+	// Vérifie si la permission existe ET vaut 1
+	if (isset($permissons[$link]) && $permissons[$link] == 1) {
+		return true;
+	} else {
+		return false;
+	}
+}

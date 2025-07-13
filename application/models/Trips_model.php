@@ -94,4 +94,18 @@ class Trips_model extends CI_Model{
 			return array();
 		}
 	}
+
+	// Total des paiements pour un véhicule dans une période
+	public function get_total_payments($v_id = null, $start = null, $end = null) {
+	    $this->db->select('SUM(tp_amount) as total');
+	    $this->db->from('trip_payments');
+
+	    if ($v_id) $this->db->where('tp_v_id', $v_id);
+	    if ($start) $this->db->where('tp_created_date >=', $start);
+	    if ($end) $this->db->where('tp_created_date <=', $end);
+
+	    return $this->db->get()->row()->total ?? 0;
+	}
+
+
 } 

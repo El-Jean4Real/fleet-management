@@ -18,9 +18,9 @@
    }
    ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
    <head>
-      <meta charset="utf-8">
+      <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <meta http-equiv="x-ua-compatible" content="ie=edge">
       <title><?php 
@@ -37,7 +37,18 @@
       <script src="<?= base_url(); ?>assets/plugins/jquery/jquery.min.js"></script>
       <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>assets/plugins/toast/toast.min.css" />
       <script src="<?= base_url(); ?>assets/plugins/toast/toast.min.js"></script>
+ 
+     <style>
+	body {
+	 padding-bottom: 40px !important;
+	}
+
+	footer.main-footer {
+	 z-index: 0 !important;
+	}
+     </style>
    </head>
+
    <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
       <div class="wrapper">
       <!-- Navbar -->
@@ -53,10 +64,21 @@
          <ul class="navbar-nav ml-auto">
             <!-- Messages Dropdown Menu -->
             <!-- Notifications Dropdown Menu -->
+
+	    <li class="nav-item dropdown">
+	      <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">🌍Langue</a>
+	      <div class="dropdown-menu dropdown-menu-right">
+	        <a class="dropdown-item" href="<?= site_url('language/switch/french') ?>">Fr Français</a>
+	        <a class="dropdown-item" href="<?= site_url('language/switch/english') ?>">En English</a>
+	      </div>
+	    </li>
+
             <li class="nav-item">
                <a class="nav-link"  href="<?= base_url(); ?>login/logout">
                <i class="fas fa-sign-out-alt"></i></a>
             </li>
+
+
          </ul>
       </nav>
       <!-- /.navbar -->

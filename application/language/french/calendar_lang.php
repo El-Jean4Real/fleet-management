@@ -1,0 +1,20 @@
+<?php
+$lang['cal_su'] = "Di";
+$lang['cal_mo'] = "Lu";
+$lang['cal_tu'] = "Ma";
+$lang['cal_we'] = "Me";
+$lang['cal_th'] = "Je";
+$lang['cal_fr'] = "Ve";
+$lang['cal_sa'] = "Sa";
+$lang['cal_january'] = "Janvier";
+$lang['cal_february'] = "Février";
+$lang['cal_march'] = "Mars";
+$lang['cal_april'] = "Avril";
+$lang['cal_may'] = "Mai";
+$lang['cal_june'] = "Juin";
+$lang['cal_july'] = "Juillet";
+$lang['cal_august'] = "Août";
+$lang['cal_september'] = "Septembre";
+$lang['cal_october'] = "Octobre";
+$lang['cal_november'] = "Novembre";
+$lang['cal_december'] = "Décembre";

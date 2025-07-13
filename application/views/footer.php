@@ -1,7 +1,7 @@
 <footer class="main-footer">
-   <strong>Devloped By <a href="http://getsourcecodes.com" target="_blank">Getsourcecodes</a>.</strong>
+   <strong>Devloped By El-Jean With <a href="https://opensource.org/" target="_blank">OpenSource</a>.</strong>
    <div class="float-right d-none d-sm-inline-block">
-      <b>Version</b> 3.0
+      <b>Version</b> 3.8
    </div>
 </footer>
 </div>

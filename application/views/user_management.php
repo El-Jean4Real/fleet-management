@@ -54,7 +54,7 @@
                               </a>
                               <?php if (userpermission('lr_user_delete')): ?>
                               &nbsp;
-                              <a class="icon text-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')" 
+                              <a class="icon text-danger" onclick="return confirm('ï¿½tes-vous sï¿½r de vouloir supprimer cet utilisateur ?')" 
                                  href="<?= base_url('users/deleteuser/' . output($userlists['u_id'])); ?>">
                                  <i class="fa fa-trash"></i>
                               </a>
@@ -67,8 +67,8 @@
 
                   <?php if (userpermission('lr_user_delete')): ?>
                      <div class="p-3">
-                        <button type="submit" class="btn btn-danger" onclick="return confirm('Voulez-vous vraiment supprimer les utilisateurs sélectionnés ?');">
-                           <i class="fa fa-trash"></i> Supprimer la sélection
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Voulez-vous vraiment supprimer les utilisateurs sï¿½lectionnï¿½s ?');">
+                           <i class="fa fa-trash"></i> Supprimer la sÃ©lection
                         </button>
                      </div>
                   <?php endif; ?>

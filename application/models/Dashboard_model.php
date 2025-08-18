@@ -1,152 +1,183 @@
 <?php
-if (!defined('BASEPATH'))
-    exit('No direct script access allowed');
+if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 class Dashboard_model extends CI_Model
 {
+    /* ===========================
+     *      STATS GLOBALES
+     * =========================== */
     public function getdashboard_info()
     {
-        $data['tot_vehicles']      = $this->db->select('v_id')->from('vehicles')->get()->num_rows();
-        $data['tot_drivers']       = $this->db->select('d_id')->from('drivers')->get()->num_rows();
-        $data['tot_customers']     = $this->db->select('c_id')->from('customers')->get()->num_rows();
-        $data['tot_today_trips']   = $this->db->select('t_id')->from('trips')->where('t_start_date', date('Y-m-d'))->get()->num_rows();
-        $data['tot_today_income']  = $this->db->select_sum('ie_amount')->from('incomeexpense')->where('ie_date', date('Y-m-d'))->where('ie_type', 'income')->get()->row()->ie_amount;
-        $data['tot_today_expense'] = $this->db->select_sum('ie_amount')->from('incomeexpense')->where('ie_date', date('Y-m-d'))->where('ie_type', 'expense')->get()->row()->ie_amount;
-        return $data;
+        return [
+            'tot_vehicles'      => $this->db->count_all('vehicles'),
+            'tot_drivers'       => $this->db->count_all('drivers'),
+            'tot_customers'     => $this->db->count_all('customers'),
+            'tot_today_trips'   => $this->db->where('t_start_date', date('Y-m-d'))->count_all_results('trips'),
+            'tot_today_income'  => $this->sumIncomeExpense('income', date('Y-m-d')),
+            'tot_today_expense' => $this->sumIncomeExpense('expense', date('Y-m-d')),
+        ];
     }
 
+    private function sumIncomeExpense($type, $date)
+    {
+        return $this->db->select_sum('ie_amount')
+            ->from('incomeexpense')
+            ->where(['ie_date' => $date, 'ie_type' => $type])
+            ->get()->row()->ie_amount ?? 0;
+    }
+
+    /* ===========================
+     *      DRIVERS & VEHICULES
+     * =========================== */
     public function get_driverdetails($d_id)
     {
-        return $this->db->select('*')->from('drivers')->where('d_id', $d_id)->get()->result_array();
-    }
-
-    public function get_todayreminder()
-    {
-        return $this->db->select('*')->from('reminder')->where(array('r_date' => date('Y-m-d'), 'r_isread' => 0))->get()->result_array();
-    }
-
-    public function get_iechartdata()
-    {
-        $date = $this->createDateRangeArray(date('Y-m-d', strtotime('-5 day')), date('Y-m-d'));
-        $arr  = array();
-        foreach ($date as $key => $dates) {
-            $income = $this->db->select_sum('ie_amount')->from('incomeexpense')->where('ie_date', $dates)->where('ie_type', 'income')->get()->row()->ie_amount;
-            $arr[$dates]['income']  = ($income) ? $income : 0;
-            $expense = $this->db->select_sum('ie_amount')->from('incomeexpense')->where('ie_date', $dates)->where('ie_type', 'expense')->get()->row()->ie_amount;
-            $arr[$dates]['expense'] = ($expense) ? $expense : 0;
-        }
-        return $arr;
+        return $this->db->get_where('drivers', ['d_id' => $d_id])->result_array();
     }
 
     public function get_vechicle_currentlocation()
     {
         $vehicles = $this->db->select('v_id,v_registration_no,v_name')->from('vehicles')->get()->result_array();
-        if (!empty($vehicles)) {
-            foreach ($vehicles as $key => $vehicle) {
-                $lastlocation[$key] = $vehicle;
-                $getlocation = $this->db->select('latitude,longitude')->from('positions')->where('v_id', $vehicle['v_id'])->order_by('id', 'desc')->get()->row();
-                if (!empty($getlocation)) {
-                    $lastlocation[$key]['current_location'] = $this->getaddress($getlocation->latitude, $getlocation->longitude);
-                } else {
-                    $lastlocation[$key]['current_location'] = '';
-                }
-            }
-            return $lastlocation;
+        $lastlocation = [];
+
+        foreach ($vehicles as $vehicle) {
+            $location = $this->db->select('latitude,longitude')
+                ->from('positions')
+                ->where('v_id', $vehicle['v_id'])
+                ->order_by('id', 'desc')
+                ->get()->row();
+
+            $vehicle['current_location'] = $location
+                ? $this->getaddress($location->latitude, $location->longitude)
+                : '';
+
+            $lastlocation[] = $vehicle;
         }
+
+        return $lastlocation;
     }
 
     public function getvechicle_status()
     {
-        $SQLquery = 'SELECT `t_vechicle`,`t_trip_status`,b.v_name,b.v_registration_no FROM  trips a INNER join vehicles b on a.`t_vechicle`=b.v_id WHERE `t_id` IN (SELECT MAX(`t_id`) AS `t_id` FROM trips GROUP BY `t_vechicle`) ORDER BY t_trip_status';
-        $query = $this->db->query($SQLquery);
-        $vechdata = $query->result_array();
-        return !empty($vechdata) ? $vechdata : '';
+        $sql = "
+            SELECT t_vechicle, t_trip_status, v.v_name, v.v_registration_no
+            FROM trips t
+            INNER JOIN vehicles v ON t.t_vechicle = v.v_id
+            WHERE t_id IN (
+                SELECT MAX(t_id) FROM trips GROUP BY t_vechicle
+            )
+            ORDER BY t_trip_status
+        ";
+
+        return $this->db->query($sql)->result_array();
     }
 
-    function createDateRangeArray($strDateFrom, $strDateTo)
+    /* ===========================
+     *      RAPPELS & CHARTS
+     * =========================== */
+    public function get_todayreminder()
     {
-        $aryRange  = array();
-        $iDateFrom = mktime(1, 0, 0, substr($strDateFrom, 5, 2), substr($strDateFrom, 8, 2), substr($strDateFrom, 0, 4));
-        $iDateTo   = mktime(1, 0, 0, substr($strDateTo, 5, 2), substr($strDateTo, 8, 2), substr($strDateTo, 0, 4));
-        if ($iDateTo >= $iDateFrom) {
-            array_push($aryRange, date('Y-m-d', $iDateFrom)); // first entry
-            while ($iDateFrom < $iDateTo) {
-                $iDateFrom += 86400; // add 24 hours
-                array_push($aryRange, date('Y-m-d', $iDateFrom));
-            }
+        return $this->db->get_where('reminder', [
+            'r_date' => date('Y-m-d'),
+            'r_isread' => 0
+        ])->result_array();
+    }
+
+    public function get_iechartdata()
+    {
+        $dates = $this->createDateRangeArray(date('Y-m-d', strtotime('-5 day')), date('Y-m-d'));
+        $arr = [];
+
+        foreach ($dates as $d) {
+            $arr[$d] = [
+                'income'  => $this->sumIncomeExpense('income', $d),
+                'expense' => $this->sumIncomeExpense('expense', $d)
+            ];
         }
-        return $aryRange;
+
+        return $arr;
     }
 
-    public function getaddress($lat, $lng)
+    /* ===========================
+     *      OUTILS
+     * =========================== */
+    private function createDateRangeArray($start, $end)
     {
-        $google_api_key = $this->config->item('google_api_key');
-        $url = 'https://maps.googleapis.com/maps/api/geocode/json?key=' . $google_api_key . '&latlng=' . trim($lat) . ',' . trim($lng) . '&sensor=false';
-        $handle = curl_init();
-        curl_setopt($handle, CURLOPT_RETURNTRANSFER, TRUE);
-        curl_setopt($handle, CURLOPT_VERBOSE, 0);
-        curl_setopt($handle, CURLOPT_URL, $url);
-        $datas = curl_exec($handle);
-        curl_close($handle);
-        $data = json_decode($datas);
-        if (!empty($data)) {
-            $status = $data->status;
-            if ($status == "OK") {
-                return $data->results[1]->formatted_address;
-            } else {
-                return false;
-            }
-        } else {
-            return '';
+        $range = [];
+        $current = strtotime($start);
+        $endTime = strtotime($end);
+
+        while ($current <= $endTime) {
+            $range[] = date('Y-m-d', $current);
+            $current = strtotime('+1 day', $current);
         }
+
+        return $range;
     }
 
-    // ? AJOUT : Objectifs recettes par véhicule (hebdo/mensuel)
-    public function get_objectifs_vehicules($periode_type = 'hebdomadaire')
+    private function getaddress($lat, $lng)
     {
+        $apiKey = $this->config->item('google_api_key');
+        $url = "https://maps.googleapis.com/maps/api/geocode/json?key={$apiKey}&latlng={$lat},{$lng}&sensor=false";
+
+        $ch = curl_init();
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_URL => $url
+        ]);
+        $result = curl_exec($ch);
+        curl_close($ch);
+
+        $data = json_decode($result);
+        return (!empty($data) && $data->status == "OK")
+            ? $data->results[1]->formatted_address
+            : '';
+    }
+
+    /* ===========================
+     *      OBJECTIFS & PÃ‰RIODES
+     * =========================== */
+    public function get_objectifs_avec_depenses($periode_type = 'hebdomadaire', $date_debut = null, $date_fin = null)
+    {
+        [$date_debut, $date_fin] = $this->resolvePeriode($periode_type, $date_debut, $date_fin);
+
         $sql = "
             SELECT 
-                o.cible_id AS v_id,
-                v.v_registration_no AS vehicule_nom,
-                o.periode_debut,
-                o.periode_fin,
-                o.montant_objectif,
+                o.id, o.periode_type, o.periode_debut, o.periode_fin, o.montant_objectif,
+                v.v_id, v.v_name AS vehicule_nom,
 
-                -- Total automatique + manuel
-                (
-                    IFNULL((
-                        SELECT SUM(tp.tp_amount)
-                        FROM trip_payments tp
-                        WHERE tp.tp_v_id = o.cible_id
-                          AND tp.tp_created_date BETWEEN o.periode_debut AND o.periode_fin
-                    ), 0)
-                    +
-                    IFNULL((
-                        SELECT SUM(ie.ie_amount)
-                        FROM incomeexpense ie
-                        WHERE ie.ie_v_id = o.cible_id
-                          AND ie.ie_type = 'income'
-                          AND ie.ie_date BETWEEN o.periode_debut AND o.periode_fin
-                    ), 0)
-                ) AS montant_realise,
+                -- Recettes automatiques
+                (SELECT IFNULL(SUM(tp.tp_amount), 0)
+                 FROM trip_payments tp
+                 WHERE tp.tp_v_id = o.cible_id
+                   AND DATE(tp.tp_created_date) BETWEEN ? AND ?) AS montant_realise,
 
-                -- Pourcentage
+                -- Recettes manuelles
+                (SELECT IFNULL(SUM(ie.ie_amount), 0)
+                 FROM incomeexpense ie
+                 WHERE ie.ie_v_id = o.cible_id
+                   AND ie.ie_type = 'income'
+                   AND DATE(ie.ie_date) BETWEEN ? AND ?) AS montant_manuel,
+
+                -- DÃ©penses
+                (SELECT IFNULL(SUM(ie.ie_amount), 0)
+                 FROM incomeexpense ie
+                 WHERE ie.ie_v_id = o.cible_id
+                   AND ie.ie_type = 'expense'
+                   AND DATE(ie.ie_date) BETWEEN ? AND ?) AS depenses,
+
+                -- Taux atteinte
                 ROUND((
                     (
-                        IFNULL((
-                            SELECT SUM(tp.tp_amount)
-                            FROM trip_payments tp
-                            WHERE tp.tp_v_id = o.cible_id
-                              AND tp.tp_created_date BETWEEN o.periode_debut AND o.periode_fin
-                        ), 0)
+                        (SELECT IFNULL(SUM(tp.tp_amount), 0)
+                         FROM trip_payments tp
+                         WHERE tp.tp_v_id = o.cible_id
+                           AND DATE(tp.tp_created_date) BETWEEN ? AND ?)
                         +
-                        IFNULL((
-                            SELECT SUM(ie.ie_amount)
-                            FROM incomeexpense ie
-                            WHERE ie.ie_v_id = o.cible_id
-                              AND ie.ie_type = 'income'
-                              AND ie.ie_date BETWEEN o.periode_debut AND o.periode_fin
-                        ), 0)
+                        (SELECT IFNULL(SUM(ie.ie_amount), 0)
+                         FROM incomeexpense ie
+                         WHERE ie.ie_v_id = o.cible_id
+                           AND ie.ie_type = 'income'
+                           AND DATE(ie.ie_date) BETWEEN ? AND ?)
                     ) / o.montant_objectif
                 ) * 100, 2) AS taux_atteinte
 
@@ -154,66 +185,34 @@ class Dashboard_model extends CI_Model
             LEFT JOIN vehicles v ON v.v_id = o.cible_id
             WHERE o.type_cible = 'vehicule'
               AND o.periode_type = ?
-            ORDER BY o.periode_debut DESC
+              AND o.periode_debut = ?
+              AND o.periode_fin = ?
+            ORDER BY v.v_name ASC
         ";
 
-        return $this->db->query($sql, [$periode_type])->result_array();
+        $params = [
+            $date_debut, $date_fin, // montant_realise
+            $date_debut, $date_fin, // montant_manuel
+            $date_debut, $date_fin, // depenses
+            $date_debut, $date_fin, // taux_atteinte - auto
+            $date_debut, $date_fin, // taux_atteinte - manuel
+            $periode_type, $date_debut, $date_fin // WHERE final
+        ];
+
+        return $this->db->query($sql, $params)->result_array();
     }
 
-    
-    public function get_objectifs_avec_depenses($periode_type = 'hebdomadaire') {
-        $periode_type = strtolower($periode_type); // sécurise l'entrée
-
-        $sql = "
-            SELECT 
-                o.id,
-                o.periode_type,
-                o.periode_debut,
-                o.periode_fin,
-                o.montant_objectif,
-                v.v_id,
-                v.v_name AS vehicule_nom,
-
-                -- Recettes automatiques (trip_payments)
-                (
-                    SELECT IFNULL(SUM(tp.tp_amount), 0)
-                    FROM trip_payments tp
-                    WHERE tp.tp_v_id = o.cible_id
-                      AND DATE(tp.tp_created_date) BETWEEN o.periode_debut AND o.periode_fin
-                ) AS montant_realise,
-
-                -- Recettes manuelles (incomeexpense)
-                (
-                    SELECT IFNULL(SUM(ie.ie_amount), 0)
-                    FROM incomeexpense ie
-                    WHERE ie.ie_v_id = o.cible_id
-                      AND ie.ie_type = 'income'
-                      AND DATE(ie.ie_date) BETWEEN o.periode_debut AND o.periode_fin
-                ) AS montant_manuel,
-                -- Dépenses
-                (
-                    SELECT IFNULL(SUM(ie.ie_amount), 0)
-                    FROM incomeexpense ie
-                    WHERE ie.ie_v_id = o.cible_id
-                      AND ie.ie_type = 'expense'
-                      AND DATE(ie.ie_date) BETWEEN o.periode_debut AND o.periode_fin
-                ) AS depenses
-
-            FROM objectifs_recette o
-            LEFT JOIN vehicles v ON v.v_id = o.cible_id
-            WHERE o.type_cible = 'vehicule'
-              AND o.periode_type = ?
-        ORDER BY o.periode_debut DESC
-        ";
-
-        $query = $this->db->query($sql, [$periode_type]);
-
-        if (!$query) {
-            log_message('error', 'Échec de la requête SQL dans get_objectifs_avec_depenses()');
-            return [];
+    private function resolvePeriode($type, $debut, $fin)
+    {
+        if (!$debut || !$fin) {
+            if ($type === 'hebdomadaire') {
+                $debut = date('Y-m-d', strtotime('monday this week'));
+                $fin   = date('Y-m-d', strtotime('sunday this week'));
+            } elseif ($type === 'mensuel') {
+                $debut = date('Y-m-01');
+                $fin   = date('Y-m-t');
+            }
         }
-
-        return $query->result_array();
+        return [$debut, $fin];
     }
-
 }

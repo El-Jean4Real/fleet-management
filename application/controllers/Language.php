@@ -1,13 +1,22 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Language extends MY_Controller {
+class Language extends CI_Controller {
 
-    public function switch($lang = "french") {
-        $allowed = ['english', 'french'];
-        if (in_array($lang, $allowed)) {
-            $this->session->set_userdata('site_lang', $lang);
+    public function __construct()
+    {
+        parent::__construct();
+        // ?? Charge la librairie user_agent ici
+        $this->load->library('user_agent');
+    }
+
+    public function switch($lang = 'french')
+    {
+        if (!in_array($lang, ['french', 'english'])) {
+            $lang = 'french'; // langue par défaut
         }
-        redirect($_SERVER['HTTP_REFERER']);
+
+        $this->session->set_userdata('site_lang', $lang);
+        redirect($this->agent->referrer() ?? base_url());
     }
 }

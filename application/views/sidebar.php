@@ -1,3 +1,5 @@
+
+
 <aside class="main-sidebar elevation-1 sidebar-dark-warning">
    <?php $data = sitedata();  ?>
    <a href="<?= base_url(); ?>/dashboard" class="brand-link">
@@ -11,7 +13,7 @@
                <a href="<?= base_url(); ?>dashboard" class="nav-link <?php echo activate_menu('dashboard');?>">
                   <i class="nav-icon fas fa-tachometer-alt"></i>
                   <p>
-                     Dashboard
+                     <?= lang('dashboard_title') ?: 'Accueil Tableau de bord' ?>
                   </p>
                </a>
             </li>
@@ -20,7 +22,7 @@
                <a href="#" class="nav-link <?php echo activate_menu('vehicle');?> <?php echo activate_menu('addvehicle');?><?php echo activate_menu('viewvehicle');?><?php echo activate_menu('editvehicle');?><?php echo activate_menu('vehiclegroup');?>">
                   <i class="nav-icon fas fa-truck"></i>
                   <p>
-                     Vehicle's
+                     <?= lang('vehicles') ?: 'Véhicules' ?>
                      <i class="right fas fa-angle-left"></i>
                   </p>
                </a>
@@ -29,21 +31,21 @@
                   <li class="nav-item">
                      <a href="<?= base_url(); ?>vehicle" class="nav-link <?php echo activate_menu('vehicle');?><?php echo activate_menu('editvehicle');?><?php echo activate_menu('viewvehicle');?>">
                         <i class="nav-icon fas faa-list"></i>
-                        <p>Vehicle List</p>
+                        <p><?= lang('vehicle_list') ?: 'Car\'s list' ?></p>
                      </a>
                   </li>
                  <?php } if(userpermission('lr_vech_add')) { ?>
                   <li class="nav-item">
                      <a href="<?= base_url(); ?>vehicle/addvehicle" class="nav-link <?php echo activate_menu('addvehicle');?>">
                         <i class="nav-icon fas faa-plus"></i>
-                        <p>Add Vehicle</p>
+                        <p><?= lang('add_vehicle') ?: 'Add Vehicle' ?></p>
                      </a>
                   </li>
                   <?php } if(userpermission('lr_vech_group')) { ?>
                   <li class="nav-item">
                      <a href="<?= base_url(); ?>vehicle/vehiclegroup" class="nav-link <?php echo activate_menu('vehiclegroup');?>">
                         <i class="nav-icon fas faa-plus"></i>
-                        <p>Vehicle Group</p>
+                        <p><?= lang('vehicle_group') ?: 'Vehicle Group' ?></p>
                      </a>
                   </li>
                 <?php } ?>
@@ -55,7 +57,7 @@
                <a href="#" class="nav-link <?php echo activate_menu('drivers');?> <?php echo activate_menu('adddrivers');?><?php echo activate_menu('editdriver');?>">
                   <i class="nav-icon fas fa-user-secret"></i>
                   <p>
-                     Driver's
+                     <?= lang('drivers') ?: 'Driver\'s' ?>
                      <i class="right fas fa-angle-left"></i>
                   </p>
                </a>
@@ -64,14 +66,14 @@
                   <li class="nav-item">
                      <a href="<?= base_url(); ?>drivers" class="nav-link <?php echo activate_menu('drivers');?><?php echo activate_menu('editdriver');?>">
                         <i class="nav-icon fas faa-list"></i>
-                        <p>Driver List</p>
+                        <p><?= lang('driver_list') ?: 'Driver List' ?></p>
                      </a>
                   </li>
                   <?php } if(userpermission('lr_drivers_add')) { ?>
                   <li class="nav-item">
                      <a href="<?= base_url(); ?>drivers/adddrivers" class="nav-link <?php echo activate_menu('adddrivers');?>">
                         <i class="nav-icon fas faa-plus"></i>
-                        <p>Add Driver</p>
+                        <p><?= lang('add_driver') ?: 'Add Driver' ?></p>
                      </a>
                   </li>
                   <?php } ?>
@@ -84,7 +86,7 @@
                <a href="#" class="nav-link <?php echo activate_menu('trips');?> <?php echo activate_menu('addtrips');?> <?php echo activate_menu('edittrip');?><?php echo activate_menu('details');?>">
                   <i class="nav-icon fas fa-road"></i>
                   <p>
-                     Bookings
+                     <?= lang('bookings') ?: 'Bookings' ?>
                      <i class="right fas fa-angle-left"></i>
                   </p>
                </a>
@@ -93,14 +95,14 @@
                   <li class="nav-item">
                      <a href="<?= base_url(); ?>trips" class="nav-link <?php echo activate_menu('trips');?><?php echo activate_menu('edittrip');?><?php echo activate_menu('details');?>">
                         <i class="nav-icon fas faa-list"></i>
-                        <p>Booking List</p>
+                        <p><?= lang('bookings') ?: 'Booking List' ?></p>
                      </a>
                   </li>
                   <?php } if(userpermission('lr_trips_add')) { ?>
                   <li class="nav-item">
                      <a href="<?= base_url(); ?>trips/addtrips" class="nav-link <?php echo activate_menu('addtrips');?>">
                         <i class="nav-icon fas faa-plus"></i>
-                        <p>Add Booking</p>
+                        <p><?= lang('add_booking') ?: 'Add Booking' ?></p>
                      </a>
                   </li>
                   <?php } ?>
@@ -113,7 +115,7 @@
                <a href="#" class="nav-link <?php echo activate_menu('customer');?> <?php echo activate_menu('addcustomer');?><?php echo activate_menu('editcustomer');?>">
                   <i class="nav-icon fas fa-user"></i>
                   <p>
-                     Customer
+                     <?= lang('customer') ?: 'Customer' ?>
                      <i class="right fas fa-angle-left"></i>
                   </p>
                </a>
@@ -122,14 +124,14 @@
                   <li class="nav-item">
                      <a href="<?= base_url(); ?>customer" class="nav-link <?php echo activate_menu('customer');?><?php echo activate_menu('editcustomer');?>">
                         <i class="nav-icon fas faa-list"></i>
-                        <p>Customer Management</p>
+                        <p><?= lang('customer_management') ?: 'Customer Management' ?></p>
                      </a>
                   </li>
                   <?php } if(userpermission('lr_cust_add')) { ?>
                   <li class="nav-item">
                      <a href="<?= base_url(); ?>customer/addcustomer" class="nav-link <?php echo activate_menu('addcustomer');?>">
                         <i class="nav-icon fas faa-plus"></i>
-                        <p>Add Customer</p>
+                        <p><?= lang('add_customer') ?: 'Add Customer' ?></p>
                      </a>
                   </li>
                    <?php } ?>
@@ -141,7 +143,7 @@
                <a href="#" class="nav-link <?php echo activate_menu('fuel');?> <?php echo activate_menu('addfuel');?><?php echo activate_menu('editfuel');?>">
                   <i class="nav-icon fa fa-battery-three-quarters"></i>
                   <p>
-                     Fuel
+                     <?= lang('fuel') ?: 'Fuel' ?>
                      <i class="right fas fa-angle-left"></i>
                   </p>
                </a>
@@ -150,14 +152,14 @@
                   <li class="nav-item">
                      <a href="<?= base_url(); ?>fuel" class="nav-link <?php echo activate_menu('fuel');?> <?php echo activate_menu('editfuel');?>">
                         <i class="nav-icon fas faa-list"></i>
-                        <p>Fuel Management</p>
+                        <p><?= lang('fuel_management') ?: 'Fuel Management' ?></p>
                      </a>
                   </li>
                    <?php } if(userpermission('lr_fuel_add')) { ?>
                   <li class="nav-item">
                      <a href="<?= base_url(); ?>fuel/addfuel" class="nav-link <?php echo activate_menu('addfuel');?>">
                         <i class="nav-icon fas faa-plus"></i>
-                        <p>Add Fuel</p>
+                        <p><?= lang('add_fuel') ?: 'Add Fuel' ?></p>
                      </a>
                   </li>
                    <?php } ?>
@@ -169,7 +171,7 @@
                <a href="#" class="nav-link <?php echo activate_menu('reminder');?> <?php echo activate_menu('addreminder');?><?php echo activate_menu('editreminder');?>">
                   <i class="nav-icon fas fa fa-bullhorn"></i>
                   <p>
-                     Reminder
+                     <?= lang('reminder') ?: 'Reminder' ?>
                      <i class="right fas fa-angle-left"></i>
                   </p>
                </a>
@@ -178,14 +180,14 @@
                   <li class="nav-item">
                      <a href="<?= base_url(); ?>reminder" class="nav-link <?php echo activate_menu('reminder');?><?php echo activate_menu('editreminder');?>">
                         <i class="nav-icon fas faa-list"></i>
-                        <p>Reminder Management</p>
+                        <p><?= lang('reminder_management') ?: 'Reminder Management' ?></p>
                      </a>
                   </li>
                   <?php } if(userpermission('lr_reminder_add')) { ?>
                   <li class="nav-item">
                      <a href="<?= base_url(); ?>reminder/addreminder" class="nav-link <?php echo activate_menu('addreminder');?>">
                         <i class="nav-icon fas faa-plus"></i>
-                        <p>Add Reminder</p>
+                        <p><?= lang('add_reminder') ?: 'Add Reminder' ?></p>
                      </a>
                   </li>
                   <?php } ?>
@@ -209,7 +211,7 @@
         
                     <i class="nav-icon fa fa-dollar-sign"></i>
                     <p>
-                        Income & Expenses
+                        <?= lang('income_expenses') ?: 'Income & Expenses' ?>
                         <i class="right fas fa-angle-left"></i>
                     </p>
                 </a>
@@ -219,7 +221,7 @@
                     <li class="nav-item">
                         <a href="<?= base_url(); ?>incomexpense" class="nav-link <?php echo activate_menu('incomexpense');?> <?php echo activate_menu('editincomexpense');?>">
                             <i class="nav-icon fas faa-list"></i>
-                            <p>Income & Expenses</p>
+                            <p><?= lang('income_expenses') ?: 'Income & Expenses' ?></p>
                         </a>
                     </li>
                     <?php } ?>
@@ -228,19 +230,19 @@
         <li class="nav-item">
             <a href="<?= base_url(); ?>incomexpense/addincomexpense" class="nav-link <?php echo activate_menu('addincomexpense');?>">
                 <i class="nav-icon fas faa-plus"></i>
-                <p>Add Income & Expenses</p>
+                <p><?= lang('add_income_expenses') ?: 'Add Income & Expenses' ?></p>
             </a>
         </li>
         <?php } ?>
 
-        <?php if(userpermission('lr_objectifs')) { ?>
-        <li class="nav-item">
-            <a href="<?= base_url(); ?>objectifs" class="nav-link <?php echo activate_menu('objectifs'); ?>">
-                <i class="nav-icon fas fa-bullseye"></i>
-                <p>Objectifs</p>
-            </a>
-        </li>
-        <?php } ?>
+			<?php if(userpermission('lr_objectifs_view') || userpermission('lr_objectifs_add')) { ?>
+			<li class="nav-item">
+				<a href="<?= base_url(); ?>objectifs" class="nav-link <?php echo activate_menu('objectifs'); ?>">
+					<i class="nav-icon fas fa-bullseye"></i>
+					<p><?= lang('objectifs') ?: 'Objectifs' ?></p>
+				</a>
+			</li>
+			<?php } ?>
     </ul>
 </li>
 <?php } ?>
@@ -251,7 +253,7 @@
                <a href="#" class="nav-link <?php echo activate_menu('tracking');?> <?php echo activate_menu('livestatus');?>">
                   <i class="nav-icon fa fa-map-pin"></i>
                   <p>
-                     Tracking
+                     <?= lang('tracking') ?: 'Tracking' ?>
                      <i class="right fas fa-angle-left"></i>
                   </p>
                </a>
@@ -260,14 +262,14 @@
                   <li class="nav-item">
                      <a href="<?= base_url(); ?>tracking" class="nav-link <?php echo activate_menu('tracking');?>">
                         <i class="nav-icon fas faa-list"></i>
-                        <p>History Tracking</p>
+                        <p><?= lang('history_tracking') ?: 'History Tracking' ?></p>
                      </a>
                   </li>
                   <?php } if(userpermission('lr_liveloc')) { ?>
                   <li class="nav-item">
                      <a href="<?= base_url(); ?>tracking/livestatus" class="nav-link <?php echo activate_menu('livestatus');?>">
                         <i class="nav-icon fas faa-plus"></i>
-                        <p>Live Location</p>
+                        <p><?= lang('live_location') ?: 'Live Location' ?></p>
                      </a>
                   </li>
                   <?php } ?>
@@ -279,7 +281,7 @@
                <a href="#" class="nav-link <?php echo activate_menu('geofence');?> <?php echo activate_menu('addgeofence');?> <?php echo activate_menu('geofenceevents');?>">
                   <i class="nav-icon fa fa-street-view"></i>
                   <p>
-                     Geofence
+                     <?= lang('geofence') ?: 'Geofence' ?>
                      <i class="right fas fa-angle-left"></i>
                   </p>
                </a>
@@ -288,21 +290,21 @@
                   <li class="nav-item">
                      <a href="<?= base_url(); ?>geofence/addgeofence" class="nav-link <?php echo activate_menu('addgeofence');?>">
                         <i class="nav-icon fas faa-list"></i>
-                        <p>Add Geofence</p>
+                        <p><?= lang('add_geofence') ?: 'Add Geofence' ?></p>
                      </a>
                   </li>
                   <?php } if(userpermission('lr_geofence_list')) { ?>
                   <li class="nav-item">
                      <a href="<?= base_url(); ?>geofence" class="nav-link <?php echo activate_menu('geofence');?>">
                         <i class="nav-icon fas faa-plus"></i>
-                        <p>Geofence Management</p>
+                        <p><?= lang('geofence_management') ?: 'Geofence Management' ?></p>
                      </a>
                   </li>
                   <?php } if(userpermission('lr_geofence_events')) { ?>
                   <li class="nav-item">
                      <a href="<?= base_url(); ?>geofence/geofenceevents" class="nav-link <?php echo activate_menu('geofenceevents');?>">
                         <i class="nav-icon fas faa-plus"></i>
-                        <p>Geofence Events</p>
+                        <p><?= lang('geofence_events') ?: 'Geofence Events' ?></p>
                      </a>
                   </li>
                   <?php } ?>
@@ -313,7 +315,7 @@
                <a href="#" class="nav-link <?php echo activate_menu('booking');?><?php echo activate_menu('fuels');?><?php echo activate_menu('incomeexpense');?>">
                   <i class="nav-icon fa fa-calculator" aria-hidden="true"></i>
                   <p>
-                     Reports
+                     <?= lang('reports') ?: 'Reports' ?>
                      <i class="right fas fa-angle-left"></i>
                   </p>
                </a>
@@ -321,19 +323,19 @@
                   <li class="nav-item">
                      <a href="<?= base_url(); ?>reports/booking" class="nav-link <?php echo activate_menu('booking');?>">
                         <i class="fas fa-cosg icon nav-icon"></i>
-                        <p>Bookings</p>
+                        <p><?= lang('bookings_report') ?: 'Bookings' ?></p>
                      </a>
                   </li>
                   <li class="nav-item">
                      <a href="<?= base_url(); ?>reports/incomeexpense" class="nav-link <?php echo activate_menu('incomeexpense');?>">
                         <i class="nav-icon fas faa-plus"></i>
-                        <p>Income & Expenses</p>
+                        <p><?= lang('income_expenses_report') ?: 'Income & Expenses' ?></p>
                      </a>
                   </li>
                   <li class="nav-item">
                      <a href="<?= base_url(); ?>reports/fuels" class="nav-link <?php echo activate_menu('fuels');?>">
                         <i class="nav-icon fas faa-plus"></i>
-                        <p>Fuel</p>
+                        <p><?= lang('fuels_report') ?: 'Fuel' ?></p>
                      </a>
                   </li>
                </ul>
@@ -343,7 +345,7 @@
                <a href="#" class="nav-link <?php echo activate_menu('websitesetting');?><?php echo activate_menu('email_template');?> <?php echo activate_menu('smtpconfig');?><?php echo activate_menu('edit_email_template');?>">
                   <i class="nav-icon fa fa-dollar-sign"></i>
                   <p>
-                     Setting's
+                     <?= lang('settings') ?: "Setting's" ?>
                      <i class="right fas fa-angle-left"></i>
                   </p>
                </a>
@@ -351,19 +353,19 @@
                   <li class="nav-item">
                      <a href="<?= base_url(); ?>settings/websitesetting" class="nav-link <?php echo activate_menu('websitesetting');?>">
                         <i class="fas fa-cosg icon nav-icon"></i>
-                        <p>General Settings</p>
+                        <p><?= lang('general_settings') ?: 'General Settings' ?></p>
                      </a>
                   </li>
                   <li class="nav-item">
                      <a href="<?= base_url(); ?>settings/smtpconfig" class="nav-link <?php echo activate_menu('smtpconfig');?>">
                         <i class="nav-icon fas faa-plus"></i>
-                        <p>SMTP Configuration</p>
+                        <p><?= lang('smtp_configuration') ?: 'SMTP Configuration' ?></p>
                      </a>
                   </li>
                   <li class="nav-item">
                      <a href="<?= base_url(); ?>settings/email_template" class="nav-link <?php echo activate_menu('email_template');?><?php echo activate_menu('edit_email_template');?>">
                         <i class="nav-icon fas faa-plus"></i>
-                        <p>Email Template</p>
+                        <p><?= lang('email_template') ?: 'Email Template' ?></p>
                      </a>
                   </li>
                </ul>
@@ -372,7 +374,7 @@
                <a href="#" class="nav-link <?php echo activate_menu('users');?> <?php echo activate_menu('edituser');?><?php echo activate_menu('adduser');?>">
                   <i class="nav-icon fa fa-user"></i>
                   <p>
-                     User's
+                     <?= lang('users') ?: 'User\'s' ?>
                      <i class="right fas fa-angle-left"></i>
                   </p>
                </a>
@@ -380,13 +382,13 @@
                   <li class="nav-item">
                      <a href="<?= base_url(); ?>users" class="nav-link <?php echo activate_menu('users');?> <?php echo activate_menu('edituser');?>">
                         <i class="fas fa-cosg icon nav-icon"></i>
-                        <p>User Management</p>
+                        <p><?= lang('user_management') ?: 'User Management' ?></p>
                      </a>
                   </li>
                   <li class="nav-item">
                      <a href="<?= base_url(); ?>users/adduser" class="nav-link <?php echo activate_menu('adduser');?>">
                         <i class="nav-icon fas faa-plus"></i>
-                        <p>Add User</p>
+                        <p><?= lang('add_user') ?: 'Add User' ?></p>
                      </a>
                   </li>
                </ul>
@@ -396,7 +398,7 @@
                <a href="<?= base_url(); ?>resetpassword" class="nav-link <?php echo activate_menu('resetpassword');?>">
                   <i class="nav-icon fa fa-key"></i>
                   <p>
-                     Change Password
+                     <?= lang('change_password') ?: 'Change Password' ?>
                   </p>
                </a>
             </li>

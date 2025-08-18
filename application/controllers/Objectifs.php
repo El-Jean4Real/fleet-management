@@ -32,36 +32,67 @@ class Objectifs extends MY_Controller {
         $this->load->view('template', $data);
     }
 
-    public function add() {
+    public function add()
+    {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $type_cible = $this->input->post('type_cible');
             $cible_id = $this->input->post('cible_id');
-            if (empty($cible_id)) {
-                $this->session->set_flashdata('error', 'Veuillez sélectionner une cible valide.');
+            $groupe_id = $this->input->post('cible_id_groupe'); // ?? nouveau champ
+
+            if (empty($cible_id) && empty($groupe_id)) {
+                $this->session->set_flashdata('error', $this->lang->line('select_target_or_group'));
                 redirect('objectifs/add');
                 return;
             }
 
-            $data = [
-                'type_cible' => $this->input->post('type_cible'),
-                'cible_id' => $cible_id,
-                'periode_type' => $this->input->post('periode_type'),
-                'periode_debut' => $this->input->post('periode_debut'),
-                'periode_fin' => $this->input->post('periode_fin'),
-                'montant_objectif' => $this->input->post('montant_objectif')
-            ];
+            $periode_type = $this->input->post('periode_type');
+            $periode_debut = $this->input->post('periode_debut');
+            $periode_fin = $this->input->post('periode_fin');
+            $montant = $this->input->post('montant_objectif');
 
-            if ($this->Objectifs_model->insert($data)) {
-                $this->session->set_flashdata('success', 'Objectif ajouté avec succès.');
+            if (!empty($groupe_id)) {
+                // Objectif appliqué à tous les véhicules du groupe
+                $vehicules = $this->Vehicle_model->get_by_group($groupe_id);
+
+                foreach ($vehicules as $vehicule) {
+                    $data = [
+                        'type_cible' => 'vehicule',
+                        'cible_id' => $vehicule['v_id'],
+                        'periode_type' => $periode_type,
+                        'periode_debut' => $periode_debut,
+                        'periode_fin' => $periode_fin,
+                        'montant_objectif' => $montant
+                    ];
+                    $this->Objectifs_model->insert($data);
+                }
+
+                $this->session->set_flashdata('success', $this->lang->line('objective_added_group'));
             } else {
-                $this->session->set_flashdata('error', 'Une erreur est survenue lors de l’enregistrement.');
+                // Objectif individuel
+                $data = [
+                    'type_cible' => $type_cible,
+                    'cible_id' => $cible_id,
+                    'periode_type' => $periode_type,
+                    'periode_debut' => $periode_debut,
+                    'periode_fin' => $periode_fin,
+                    'montant_objectif' => $montant
+                ];
+
+                if ($this->Objectifs_model->insert($data)) {
+                    $this->session->set_flashdata('success', $this->lang->line('objective_added'));
+                } else {
+                    $this->session->set_flashdata('error', $this->lang->line('objective_add_error'));
+                }
             }
 
             redirect('objectifs');
         } else {
             $view_data = [
                 'vehicules' => $this->Vehicle_model->get_all(),
+                'vehicule_group' => $this->Vehicle_model->get_all_groups(), // méthode à créer
                 'chauffeurs' => $this->Drivers_model->get_all()
             ];
+
 
             $data['header'] = $this->load->view('header', '', TRUE);
             $data['sidebar'] = $this->load->view('sidebar', '', TRUE);

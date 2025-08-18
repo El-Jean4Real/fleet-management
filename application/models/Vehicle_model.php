@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class vehicle_model extends CI_Model{
+class Vehicle_model extends CI_Model{
 	
 	public function add_vehicle($data) { 
 		unset($data['v_id']);
@@ -47,8 +47,14 @@ class vehicle_model extends CI_Model{
     		$this->db->delete('vehicle_group');
     		return true;
 		}
-	
 	}
+	public function get_by_group($groupe_id) {
+	    return $this->db->get_where('vehicles', ['v_group' => $groupe_id])->result_array();
+	}
+	public function get_all_groups() {
+    	return $this->db->get('`vehicle_group`')->result_array();
+	}
+
 	public function get_all() {
 	    $query = $this->db->get('vehicles');
 	    return $query->result_array();
